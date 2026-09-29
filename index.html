@@ -93,31 +93,54 @@ function handleGoogleCredential(response){
   loginForm.submit();
 
   loginTimer=setTimeout(function(){
-    showError('L’accesso sta impiegando troppo tempo. Premi di nuovo “Continua con Google”.');
-  },15000);
+    showError('Il server non ha completato il login. Premi di nuovo “Continua con Google”.');
+  },30000);
 }
 function initGoogleButton(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogleButton,120);return}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(document.getElementById('googleButton'),{type:'standard',theme:'outline',size:'large',text:'continue_with',shape:'rectangular',logo_alignment:'left',width:330})}
 
 window.addEventListener('message',event=>{
-  if(event.source!==app.contentWindow)return;
-
   const data=event.data||{};
 
-  if(data.type==='GDF_PWA_READY'){
+  // 1) Risultato del login: arriva dalla callback GitHub caricata
+  //    dentro l'iframe app. È la stessa origine della PWA.
+  if(event.origin===window.location.origin && data.type==='GDF_PWA_AUTH_SUCCESS'){
     if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
-    if(data.token) currentSessionToken=String(data.token);
+    currentSessionToken=String(data.token||'');
     credentialInput.value='';
+
+    if(!currentSessionToken){
+      showError('Sessione non valida.');
+      return;
+    }
+
     clearError();
     statusBox.textContent='Accesso completato.';
     loginScreen.style.display='none';
-    app.style.display='block';
     lockBtn.style.display='block';
+    app.style.display='block';
+
+    const q=new URLSearchParams();
+    q.set('page','dashboard');
+    q.set('token',currentSessionToken);
+    q.set('_pwa',String(Date.now()));
+    app.src=APP_URL+'?'+q.toString();
     return;
   }
 
-  if(data.type==='GDF_PWA_LOGIN_DENIED'){
+  if(event.origin===window.location.origin && data.type==='GDF_PWA_AUTH_ERROR'){
+    if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
     credentialInput.value='';
     showError(data.message||'Accesso non autorizzato.');
+    return;
+  }
+
+  // 2) Messaggi dal gestionale Apps Script caricato nell'iframe.
+  if(event.source!==app.contentWindow)return;
+
+  if(data.type==='GDF_PWA_READY'){
+    if(data.token) currentSessionToken=String(data.token);
+    app.style.display='block';
+    lockBtn.style.display='block';
     return;
   }
 

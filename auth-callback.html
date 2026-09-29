@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GDF Accesso</title>
+<style>
+html,body{margin:0;background:#fff;font-family:Arial,sans-serif;color:#475569}
+body{padding:18px;font-size:13px}
+</style>
+</head>
+<body>
+Completamento accesso…
+<script>
+(function(){
+  const h=new URLSearchParams((location.hash||'').replace(/^#/,''));
+  const token=h.get('token')||'';
+  const error=h.get('error')||'';
+
+  // Cancella subito token/errore visibile dalla barra dell'iframe.
+  try{history.replaceState(null,'',location.pathname);}catch(e){}
+
+  if(window.parent && window.parent!==window){
+    if(token){
+      window.parent.postMessage({
+        type:'GDF_PWA_AUTH_SUCCESS',
+        token:token
+      }, location.origin);
+    }else{
+      window.parent.postMessage({
+        type:'GDF_PWA_AUTH_ERROR',
+        message:error||'Accesso non completato.'
+      }, location.origin);
+    }
+  }
+})();
+</script>
+</body>
+</html>

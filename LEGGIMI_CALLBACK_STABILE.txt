@@ -1,0 +1,28 @@
+GDF - LOGIN GOOGLE CALLBACK STABILE
+
+Questa versione corregge il timeout su "Accesso in corso...".
+
+COME FUNZIONA
+1. Google restituisce l'identità.
+2. Il form POST va ad Apps Script dentro l'iframe della PWA.
+3. Code.gs verifica Google e l'utente autorizzato.
+4. Apps Script sposta SOLO quell'iframe su auth-callback.html.
+5. La callback, essendo sullo stesso dominio GitHub della PWA, passa il token alla PWA.
+6. La PWA apre la Dashboard dentro lo stesso iframe.
+7. L'app NON deve uscire nel browser.
+
+APPS SCRIPT
+- sostituisci Code.gs con Code_GDF_LOGIN_GOOGLE_CALLBACK_STABILE.gs
+- Dashboard.html e Index.html possono restare quelli NON_ESCE_DALL_APP;
+  per sicurezza sono inclusi anche come file completi separati.
+- salva e crea una NUOVA VERSIONE del deployment.
+
+GITHUB
+- estrai GDF_PWA_LOGIN_CALLBACK_STABILE.zip
+- carica TUTTI i file nel repository gdf-app, incluso auth-callback.html
+- Commit changes
+- aspetta 1-2 minuti.
+
+IPHONE
+- chiudi completamente GDF
+- se continua a mostrare file vecchi, elimina l'icona e aggiungila di nuovo da Safari.

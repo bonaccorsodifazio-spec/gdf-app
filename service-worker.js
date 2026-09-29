@@ -1,4 +1,4 @@
-const CACHE = "gdf-pwa-shell-v4";
+const CACHE = "gdf-pwa-shell-v5";
 const SHELL = [
   "./",
   "./index.html",

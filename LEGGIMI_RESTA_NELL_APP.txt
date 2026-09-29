@@ -1,0 +1,21 @@
+GDF PWA - RESTA SEMPRE NELL'APP
+
+Questa versione:
+- rende il login più rapido perché Code.gs restituisce direttamente la Dashboard;
+- mantiene Dashboard e Preventivatore dentro l'app installata;
+- conserva il token solo in memoria della PWA;
+- non apre più una nuova scheda/browser per passare Dashboard <-> Preventivatore;
+- Nuovo preventivo resta dentro l'app e parte vuoto.
+
+SOSTITUISCI IN APPS SCRIPT:
+1) Code.gs -> Code_GDF_PWA_RESTA_NELL_APP_VELOCE.gs
+2) Dashboard.html -> Dashboard_GDF_PWA_RESTA_NELL_APP.html
+3) Index.html -> Index_GDF_PWA_RESTA_NELL_APP.html
+
+Poi crea una nuova versione del deployment.
+
+SU GITHUB:
+Estrai GDF_PWA_RESTA_NELL_APP.zip, carica tutti i file in gdf-app e fai Commit changes.
+
+Dopo l'aggiornamento chiudi completamente l'app e riaprila.
+Su iPhone, se resta la vecchia cache, elimina l'icona e aggiungila nuovamente da Safari.

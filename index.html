@@ -59,20 +59,14 @@ const cfg=window.GDF_PWA_CONFIG||{}, APP_URL=String(cfg.appUrl||'').trim(), GOOG
 const app=document.getElementById('app'), loginScreen=document.getElementById('loginScreen');
 const credentialInput=document.getElementById('googleCredential'), loginForm=document.getElementById('googleLoginForm');
 const errorBox=document.getElementById('error'), statusBox=document.getElementById('status'), lockBtn=document.getElementById('lockBtn');
-let loginTimer=null;
-let currentSessionToken='';
 
 function showError(msg){
-  if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
   errorBox.textContent=msg||'Accesso non riuscito.';
   errorBox.style.display='block';
   statusBox.textContent='Accesso non completato.';
-  app.src='about:blank';
-  app.style.display='none';
 }
 function clearError(){errorBox.style.display='none';errorBox.textContent=''}
 function showLogin(){
-  if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
   app.src='about:blank';
   app.style.display='none';
   lockBtn.style.display='none';
@@ -82,99 +76,25 @@ function showLogin(){
 }
 function handleGoogleCredential(response){
   clearError();
-  if(!response||!response.credential)return showError('Google non ha restituito una credenziale valida.');
+
+  if(!response||!response.credential){
+    showError('Google non ha restituito una credenziale valida.');
+    return;
+  }
 
   statusBox.textContent='⏳ Accesso in corso...';
   credentialInput.value=response.credential;
 
-  // Il POST viene aperto direttamente nell'iframe del gestionale.
-  // Se è valido, Code.gs reindirizza quell'iframe alla Dashboard.
-  app.style.display='none';
+  // Niente timer e niente messaggi tra domini.
+  // Il server carica direttamente Dashboard o l'errore nell'iframe.
+  loginScreen.style.display='none';
+  app.style.display='block';
+  lockBtn.style.display='block';
   loginForm.submit();
-
-  loginTimer=setTimeout(function(){
-    showError('Il server non ha risposto al login. Controlla la connessione e riprova.');
-  },45000);
 }
 function initGoogleButton(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogleButton,120);return}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(document.getElementById('googleButton'),{type:'standard',theme:'outline',size:'large',text:'continue_with',shape:'rectangular',logo_alignment:'left',width:330})}
 
-window.addEventListener('message',event=>{
-  if(event.source!==app.contentWindow)return;
-
-  const data=event.data||{};
-
-  // Il server ha verificato Google e l'autorizzazione:
-  // qui il login è già concluso. Non aspettiamo il caricamento Dashboard.
-  if(data.type==='GDF_PWA_AUTH_SUCCESS'){
-    if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
-
-    currentSessionToken=String(data.token||'');
-    credentialInput.value='';
-
-    if(!currentSessionToken){
-      showError('Sessione non valida.');
-      return;
-    }
-
-    clearError();
-    statusBox.textContent='Accesso completato.';
-    loginScreen.style.display='none';
-    lockBtn.style.display='block';
-    app.style.display='block';
-
-    const q=new URLSearchParams();
-    q.set('page','dashboard');
-    q.set('token',currentSessionToken);
-    q.set('_pwa',String(Date.now()));
-
-    // Carica il gestionale DENTRO l'iframe della PWA.
-    app.src=APP_URL+'?'+q.toString();
-    return;
-  }
-
-  if(data.type==='GDF_PWA_AUTH_ERROR'){
-    if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
-    credentialInput.value='';
-    showError(data.message||'Accesso non autorizzato.');
-    return;
-  }
-
-  if(data.type==='GDF_PWA_READY'){
-    if(data.token) currentSessionToken=String(data.token);
-    app.style.display='block';
-    lockBtn.style.display='block';
-    return;
-  }
-
-  if(data.type==='GDF_PWA_NAVIGATE'){
-    if(!currentSessionToken){
-      showLogin();
-      return;
-    }
-
-    const page=(data.page==='index')?'index':'dashboard';
-    const q=new URLSearchParams();
-    q.set('page',page);
-    q.set('token',currentSessionToken);
-
-    const params=data.params||{};
-    Object.keys(params).forEach(function(k){
-      const v=params[k];
-      if(v!==null&&typeof v!=='undefined'&&v!=='') q.set(k,String(v));
-    });
-
-    app.style.display='block';
-    app.src=APP_URL+'?'+q.toString();
-    return;
-  }
-
-  if(data.type==='GDF_PWA_LOGOUT'||data.type==='GDF_PWA_NEED_LOGIN'){
-    currentSessionToken='';
-    try{google.accounts.id.disableAutoSelect()}catch(e){}
-    showLogin();
-  }
-});
-lockBtn.addEventListener('click',()=>{currentSessionToken='';try{google.accounts.id.disableAutoSelect()}catch(e){}showLogin()});
+lockBtn.addEventListener('click',()=>{try{google.accounts.id.disableAutoSelect()}catch(e){}showLogin()});
 showLogin();initGoogleButton();
 
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));

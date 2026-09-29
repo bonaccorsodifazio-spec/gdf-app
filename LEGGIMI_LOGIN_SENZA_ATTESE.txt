@@ -1,0 +1,21 @@
+GDF - LOGIN SENZA ATTESE
+
+Questa versione elimina completamente il timeout.
+Il server restituisce direttamente Dashboard dentro l'iframe della PWA.
+
+Non vengono più usati per il login:
+- timer
+- callback GitHub
+- postMessage
+- attesa GDF_PWA_READY
+
+Se il login fallisce, nell'app compare direttamente l'errore reale del server.
+
+APPS SCRIPT:
+sostituisci Code.gs, Dashboard.html e Index.html.
+Poi crea una nuova versione del deployment.
+
+GITHUB:
+carica tutti i file della cartella GITHUB e fai Commit changes.
+
+Infine chiudi completamente l'app e riaprila.

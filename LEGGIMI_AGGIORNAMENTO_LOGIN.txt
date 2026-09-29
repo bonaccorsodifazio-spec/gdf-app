@@ -1,0 +1,34 @@
+AGGIORNAMENTO LOGIN GOOGLE - VERSIONE STABILE
+
+Questa versione corregge il blocco su "Accesso in corso..." e semplifica la schermata.
+
+COSA CAMBIA
+- Non compare più alcun testo sul foglio UTENTI.
+- Si vede solo "Usa il tuo account Google per accedere".
+- Il controllo delle autorizzazioni continua ad avvenire in modo invisibile lato server.
+- Il POST Google viene aperto direttamente nell'iframe del gestionale.
+- La PWA si sblocca solo quando la Dashboard comunica di essere realmente pronta.
+- Dopo 15 secondi, se qualcosa non risponde, appare un errore invece di restare bloccata per sempre.
+
+PASSI
+1) Apps Script:
+   sostituisci Code.gs con Code_GDF_GOOGLE_LOGIN_FLUSSO_STABILE.gs
+   sostituisci Dashboard.html con Dashboard_GDF_GOOGLE_LOGIN_FLUSSO_STABILE.html
+   salva.
+
+2) IMPORTANTE:
+   nell'editor Apps Script, dal menu funzioni seleziona testPwaGoogleSetup
+   e premi Esegui UNA SOLA VOLTA.
+   Se Google chiede autorizzazioni, concedile.
+   Questo abilita/verifica UrlFetchApp necessario a convalidare il login Google.
+
+3) Distribuisci > Gestisci deployment > matita > Nuova versione > Esegui deployment.
+   Esegui come proprietario.
+   Accesso: Chiunque.
+
+4) GitHub:
+   estrai GDF_PWA_GOOGLE_LOGIN_STABILE.zip
+   carica tutti i file nel repository gdf-app
+   Commit changes.
+
+5) Aspetta 1-2 minuti e prova prima dal computer.

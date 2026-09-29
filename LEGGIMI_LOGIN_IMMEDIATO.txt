@@ -1,0 +1,33 @@
+GDF - LOGIN IMMEDIATO E FILE CODE.GS COMPLETO
+
+Questa versione corregge due problemi reali:
+
+1) Code.gs:
+   il precedente pacchetto CALLBACK aveva un Code.gs troncato/incompleto.
+   Questo file è ricostruito dalla versione completa e conserva tutte le funzioni del gestionale.
+
+2) Login:
+   dopo la verifica Google il server invia SUBITO il token alla PWA con postMessage.
+   Non aspetta più il caricamento della Dashboard per completare il login.
+   La Dashboard viene poi caricata dentro l'iframe dell'app.
+
+APPS SCRIPT
+- sostituisci Code.gs con Code_GDF_LOGIN_IMMEDIATO_COMPLETO.gs
+- sostituisci Dashboard.html con Dashboard_GDF_LOGIN_IMMEDIATO_COMPLETO.html
+- sostituisci Index.html con Index_GDF_LOGIN_IMMEDIATO_COMPLETO.html
+- salva
+- Distribuisci > Gestisci deployment > matita > Nuova versione > Esegui deployment
+
+GITHUB
+- estrai GDF_PWA_LOGIN_IMMEDIATO.zip
+- carica TUTTI i file nel repository gdf-app
+- Commit changes
+- aspetta 1-2 minuti
+
+IMPORTANTE
+auth-callback.html non serve più.
+Se rimane nel repository GitHub non crea problemi, ma questa versione non lo usa.
+
+IPHONE
+Chiudi completamente GDF e riaprila.
+Se il service worker mantiene la vecchia PWA, elimina l'icona e aggiungila di nuovo da Safari.

@@ -1,9 +1,8 @@
-const CACHE = "gdf-pwa-shell-v7";
+const CACHE = "gdf-pwa-shell-v8";
 const SHELL = [
   "./",
   "./index.html",
   "./offline.html",
-  "./auth-callback.html",
   "./config.js",
   "./manifest.webmanifest",
   "./icon-192.png",

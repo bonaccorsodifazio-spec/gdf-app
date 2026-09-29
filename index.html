@@ -93,18 +93,21 @@ function handleGoogleCredential(response){
   loginForm.submit();
 
   loginTimer=setTimeout(function(){
-    showError('Il server non ha completato il login. Premi di nuovo “Continua con Google”.');
-  },30000);
+    showError('Il server non ha risposto al login. Controlla la connessione e riprova.');
+  },45000);
 }
 function initGoogleButton(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogleButton,120);return}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(document.getElementById('googleButton'),{type:'standard',theme:'outline',size:'large',text:'continue_with',shape:'rectangular',logo_alignment:'left',width:330})}
 
 window.addEventListener('message',event=>{
+  if(event.source!==app.contentWindow)return;
+
   const data=event.data||{};
 
-  // 1) Risultato del login: arriva dalla callback GitHub caricata
-  //    dentro l'iframe app. È la stessa origine della PWA.
-  if(event.origin===window.location.origin && data.type==='GDF_PWA_AUTH_SUCCESS'){
+  // Il server ha verificato Google e l'autorizzazione:
+  // qui il login è già concluso. Non aspettiamo il caricamento Dashboard.
+  if(data.type==='GDF_PWA_AUTH_SUCCESS'){
     if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
+
     currentSessionToken=String(data.token||'');
     credentialInput.value='';
 
@@ -123,19 +126,18 @@ window.addEventListener('message',event=>{
     q.set('page','dashboard');
     q.set('token',currentSessionToken);
     q.set('_pwa',String(Date.now()));
+
+    // Carica il gestionale DENTRO l'iframe della PWA.
     app.src=APP_URL+'?'+q.toString();
     return;
   }
 
-  if(event.origin===window.location.origin && data.type==='GDF_PWA_AUTH_ERROR'){
+  if(data.type==='GDF_PWA_AUTH_ERROR'){
     if(loginTimer){clearTimeout(loginTimer);loginTimer=null;}
     credentialInput.value='';
     showError(data.message||'Accesso non autorizzato.');
     return;
   }
-
-  // 2) Messaggi dal gestionale Apps Script caricato nell'iframe.
-  if(event.source!==app.contentWindow)return;
 
   if(data.type==='GDF_PWA_READY'){
     if(data.token) currentSessionToken=String(data.token);

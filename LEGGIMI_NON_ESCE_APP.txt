@@ -1,0 +1,31 @@
+GDF PWA - CORREZIONE "NON DEVE USCIRE DALL'APP"
+
+Il problema principale era questo:
+- il form Google inviava il login a target="app"
+- ma l'iframe aveva id="app" SENZA name="app"
+- il browser poteva quindi creare/aprire una nuova pagina chiamata "app"
+
+Ora l'iframe è:
+<iframe id="app" name="app" ...>
+
+Inoltre Dashboard e Index non usano più <base target="_top">,
+quindi la navigazione del gestionale resta dentro il contenitore PWA.
+
+DA FARE:
+
+APPS SCRIPT
+1. Sostituisci Dashboard.html con Dashboard_GDF_PWA_NON_ESCE_DALL_APP.html
+2. Sostituisci Index.html con Index_GDF_PWA_NON_ESCE_DALL_APP.html
+3. Code.gs NON cambia in questo passaggio.
+4. Salva.
+5. Distribuisci > Gestisci deployment > matita > Nuova versione > Esegui deployment.
+
+GITHUB
+1. Estrai GDF_PWA_NON_ESCE_DALL_APP.zip
+2. Carica TUTTI i file nel repository gdf-app
+3. Commit changes
+4. Attendi 1-2 minuti.
+
+IPHONE
+Chiudi completamente GDF e riaprila.
+Se continua a usare la vecchia cache, elimina l'icona dalla Home e aggiungila nuovamente da Safari.

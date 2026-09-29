@@ -28,7 +28,7 @@ h1{margin:0 0 7px;font-size:25px}.sub{margin:0 auto 20px;color:#64748b;font-size
 </style>
 </head>
 <body>
-<iframe id="app" title="Preventivatore GruppoDiFazio" allow="clipboard-read; clipboard-write"></iframe>
+<iframe id="app" name="app" title="Preventivatore GruppoDiFazio" allow="clipboard-read; clipboard-write"></iframe>
 
 <section id="loginScreen">
   <div class="card">
@@ -89,7 +89,7 @@ function handleGoogleCredential(response){
 
   // Il POST viene aperto direttamente nell'iframe del gestionale.
   // Se è valido, Code.gs reindirizza quell'iframe alla Dashboard.
-  app.style.display='block';
+  app.style.display='none';
   loginForm.submit();
 
   loginTimer=setTimeout(function(){

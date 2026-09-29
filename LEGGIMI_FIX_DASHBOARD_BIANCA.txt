@@ -1,0 +1,17 @@
+FIX MIRATO: PREVENTIVO -> DASHBOARD BIANCA
+
+NON TOCCARE LOGIN, CODE.GS O DASHBOARD.HTML.
+
+APPS SCRIPT:
+- sostituisci SOLO Index.html con Index_GDF_FIX_DASHBOARD_BIANCA.html
+- salva
+- crea una nuova versione del deployment
+
+GITHUB:
+- estrai GDF_PWA_FIX_DASHBOARD_BIANCA.zip
+- carica tutti i file nel repository gdf-app
+- Commit changes
+
+Questa correzione cambia solo il passaggio Preventivo -> Dashboard:
+la PWA padre cambia l'URL dell'iframe, invece di far navigare direttamente
+la pagina Apps Script dall'interno dell'iframe.

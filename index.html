@@ -94,6 +94,38 @@ function handleGoogleCredential(response){
 }
 function initGoogleButton(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogleButton,120);return}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(document.getElementById('googleButton'),{type:'standard',theme:'outline',size:'large',text:'continue_with',shape:'rectangular',logo_alignment:'left',width:330})}
 
+
+window.addEventListener('message', event => {
+  if (event.source !== app.contentWindow) return;
+
+  const data = event.data || {};
+  if (data.type !== 'GDF_PWA_NAVIGATE') return;
+
+  const token = String(data.token || '');
+  if (!token) {
+    showLogin();
+    return;
+  }
+
+  const page = data.page === 'index' ? 'index' : 'dashboard';
+  const q = new URLSearchParams();
+  q.set('page', page);
+  q.set('token', token);
+
+  const params = data.params || {};
+  Object.keys(params).forEach(function(k){
+    const v = params[k];
+    if (v !== null && typeof v !== 'undefined' && v !== '') {
+      q.set(k, String(v));
+    }
+  });
+
+  // La PWA cambia la sorgente dell'iframe:
+  // non navighiamo più l'HTML Apps Script dall'interno.
+  app.src = APP_URL + '?' + q.toString();
+  app.style.display = 'block';
+});
+
 lockBtn.addEventListener('click',()=>{try{google.accounts.id.disableAutoSelect()}catch(e){}showLogin()});
 showLogin();initGoogleButton();
 

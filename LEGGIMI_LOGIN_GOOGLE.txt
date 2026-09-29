@@ -1,0 +1,32 @@
+GDF PWA - LOGIN SOLO GOOGLE
+
+Client ID già configurato:
+220991627308-vhe3se0l8ck9iku7juq845u73plov7q6.apps.googleusercontent.com
+
+COME FUNZIONA
+- Nessuna PasswordHash.
+- Nessuna PasswordTemporanea.
+- Nessun secondo login nel gestionale.
+- L'utente preme "Continua con Google".
+- Google verifica l'account.
+- Code.gs verifica che l'email sia presente nel foglio UTENTI.
+- La riga UTENTI deve avere Attivo = SI.
+- Se l'email non c'è o è disattivata, NON entra.
+
+PASSI
+1. In Apps Script sostituisci Code.gs con Code_GDF_LOGIN_SOLO_GOOGLE_PWA.gs.
+2. Sostituisci Dashboard.html con Dashboard_GDF_LOGIN_SOLO_GOOGLE_PWA.html.
+3. Non cambiare Index.html e Pdf.html per questo passaggio.
+4. Distribuisci > Gestisci deployment > matita > Nuova versione > Esegui deployment.
+   - Esegui come: te/proprietario
+   - Accesso: Chiunque
+5. Su GitHub gdf-app: Add file > Upload files.
+6. Estrai GDF_PWA_LOGIN_GOOGLE_AUTORIZZATI.zip e carica TUTTI i file contenuti.
+7. Commit changes e aspetta 1-2 minuti.
+8. Su iPhone elimina la vecchia icona GDF e aggiungila nuovamente da Safari.
+
+IMPORTANTE
+Se Google Auth Platform è ancora in modalità TEST:
+Google Auth Platform > Pubblico > Utenti di test.
+Aggiungi gli account Google che devono provarla.
+Il controllo definitivo resta comunque il foglio UTENTI.

@@ -9,36 +9,91 @@
 <meta name="apple-mobile-web-app-title" content="GDF Preventivi">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>Preventivatore GruppoDiFazio</title>
+<title>GDF Preventivi</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111827;font-family:Arial,sans-serif}
-#app{position:fixed;inset:0;width:100%;height:100%;border:0;background:#fff}
-#setup{position:fixed;inset:0;z-index:20;display:none;place-items:center;background:#f3f4f6;padding:24px}
-#setup .card{width:min(560px,100%);background:#fff;border-radius:20px;padding:26px;box-shadow:0 20px 55px rgba(0,0,0,.14)}
-#setup p{color:#64748b;line-height:1.5}
-#installBar{position:fixed;z-index:30;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;justify-content:space-between;gap:12px;background:#111827;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 12px 32px rgba(0,0,0,.28)}
-#installBar small{display:block;color:#cbd5e1;margin-top:2px}#installBar button{border:0;border-radius:10px;padding:10px 14px;background:#2563eb;color:#fff;font-weight:900}
-#iosHelp{position:fixed;z-index:40;inset:0;background:rgba(15,23,42,.68);display:none;place-items:end center;padding:20px}
-#iosHelp .sheet{width:min(540px,100%);background:#fff;border-radius:20px;padding:22px;color:#111827}
-#iosHelp button{width:100%;border:0;border-radius:10px;padding:12px;background:#e5e7eb;font-weight:800;margin-top:12px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0f172a;font-family:Arial,sans-serif}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;background:#fff;display:none}
+#loginTransport{display:none;width:0;height:0;border:0}
+#loginScreen{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at 82% 18%,rgba(124,58,237,.42),transparent 34%),linear-gradient(135deg,#0f172a,#172554 58%,#312e81)}
+.card{width:min(430px,100%);background:#fff;border-radius:24px;padding:27px;box-shadow:0 26px 80px rgba(0,0,0,.38);text-align:center}
+.logo{width:66px;height:66px;border-radius:19px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:#111827;color:#fff;font-size:23px;font-weight:900}
+h1{margin:0 0 7px;font-size:25px}.sub{margin:0 auto 20px;color:#64748b;font-size:13px;line-height:1.5;max-width:330px}
+#googleButton{min-height:44px;display:flex;justify-content:center}#status{margin-top:14px;color:#64748b;font-size:12px;line-height:1.45}
+#error{display:none;margin-top:13px;padding:11px 12px;border-radius:11px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;font-weight:700;line-height:1.45;text-align:left}
+.rule{margin-top:18px;padding-top:14px;border-top:1px solid #e5e7eb;color:#94a3b8;font-size:10px;line-height:1.45}
+#lockBtn{position:fixed;z-index:40;right:10px;top:calc(10px + env(safe-area-inset-top));display:none;width:42px;height:42px;border:0;border-radius:50%;background:rgba(15,23,42,.86);color:#fff;font-size:18px;box-shadow:0 5px 18px rgba(0,0,0,.24)}
+#installBar{position:fixed;z-index:70;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;justify-content:space-between;gap:12px;background:#111827;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+#installBar strong{font-size:14px}#installBar small{display:block;color:#cbd5e1;margin-top:2px}#installBar button{border:0;border-radius:10px;padding:10px 14px;background:#2563eb;color:#fff;font-weight:900}
+#iosHelp{position:fixed;z-index:80;inset:0;background:rgba(15,23,42,.68);display:none;place-items:end center;padding:20px}#iosHelp .sheet{width:min(540px,100%);background:#fff;border-radius:20px;padding:22px;color:#111827}#iosHelp button{width:100%;border:0;border-radius:10px;padding:12px;background:#e5e7eb;font-weight:800;margin-top:12px}
 @media(display-mode:standalone){#installBar{display:none!important}}
 </style>
 </head>
 <body>
 <iframe id="app" title="Preventivatore GruppoDiFazio" allow="clipboard-read; clipboard-write"></iframe>
-<div id="setup"><div class="card"><h1>Configura la PWA</h1><p>Nel file <b>config.js</b> inserisci l'URL <b>/exec</b> della Web App Google Apps Script.</p></div></div>
-<div id="installBar"><div><strong>Installa GDF Preventivi</strong><small>Aprila come un'app, senza barra del browser.</small></div><button id="installBtn">Installa</button></div>
-<div id="iosHelp"><div class="sheet"><h2>Aggiungi alla schermata Home</h2><p>Su iPhone/iPad usa <b>Condividi</b> e scegli <b>Aggiungi alla schermata Home</b>.</p><button onclick="document.getElementById('iosHelp').style.display='none'">Chiudi</button></div></div>
+<iframe id="loginTransport" name="loginTransport"></iframe>
+
+<section id="loginScreen">
+  <div class="card">
+    <div class="logo">GDF</div>
+    <h1>Accedi a GDF Preventivi</h1>
+    <p class="sub">Usa il tuo account Google. Entra solamente se la tua email è stata autorizzata dall'amministratore nel gestionale.</p>
+    <div id="googleButton"></div>
+    <div id="status">Nessuna password del gestionale.</div>
+    <div id="error"></div>
+    <div class="rule">Google verifica la tua identità. GDF controlla poi che la tua email sia presente nel foglio UTENTI e che sia attiva.</div>
+  </div>
+</section>
+
+<button id="lockBtn" type="button" title="Esci">↪</button>
+
+<form id="googleLoginForm" method="post" target="loginTransport" action="https://script.google.com/macros/s/AKfycbyPsG0jaMm2eL8de78GC3JhaIWfjBkTwBsIieIV3jh2QKqFpUNmvfCjUec2i6UpFWMUfQ/exec" style="display:none">
+  <input type="hidden" name="action" value="pwaGoogleLogin">
+  <input type="hidden" id="googleCredential" name="credential" value="">
+</form>
+
+<div id="installBar"><div><strong>Installa GDF Preventivi</strong><small>Aprila come un'app dalla schermata Home.</small></div><button id="installBtn">Installa</button></div>
+<div id="iosHelp"><div class="sheet"><h2 style="margin-top:0">Aggiungi alla schermata Home</h2><p>Su iPhone/iPad usa <strong>Condividi</strong> in Safari e scegli <strong>Aggiungi alla schermata Home</strong>.</p><button onclick="document.getElementById('iosHelp').style.display='none'">Chiudi</button></div></div>
+
 <script src="./config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-const cfg=window.GDF_PWA_CONFIG||{}, url=String(cfg.appUrl||"").trim(), setup=document.getElementById("setup"), app=document.getElementById("app");
-if(!url||url.includes("INCOLLA_QUI")) setup.style.display="grid"; else app.src=url;
-if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"));
-let deferredPrompt=null; const installBar=document.getElementById("installBar"), installBtn=document.getElementById("installBtn");
-const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true, isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-if(!standalone&&isIOS){installBar.style.display="flex";installBtn.textContent="Come fare";installBtn.onclick=()=>document.getElementById("iosHelp").style.display="grid";}
-addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;if(!standalone)installBar.style.display="flex";});
-installBtn.addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBar.style.display="none";});
-addEventListener("appinstalled",()=>{installBar.style.display="none";deferredPrompt=null;});
+const cfg=window.GDF_PWA_CONFIG||{}, APP_URL=String(cfg.appUrl||'').trim(), GOOGLE_CLIENT_ID=String(cfg.googleClientId||'').trim();
+const app=document.getElementById('app'), loginScreen=document.getElementById('loginScreen'), loginTransport=document.getElementById('loginTransport');
+const credentialInput=document.getElementById('googleCredential'), loginForm=document.getElementById('googleLoginForm');
+const errorBox=document.getElementById('error'), statusBox=document.getElementById('status'), lockBtn=document.getElementById('lockBtn');
+
+function showError(msg){errorBox.textContent=msg||'Accesso non riuscito.';errorBox.style.display='block';statusBox.textContent='Accesso bloccato.'}
+function clearError(){errorBox.style.display='none';errorBox.textContent=''}
+function showLogin(){app.src='about:blank';app.style.display='none';lockBtn.style.display='none';loginScreen.style.display='flex';statusBox.textContent='Nessuna password del gestionale.';clearError()}
+function openGestionale(token){if(!token)return showError('Sessione non valida.');clearError();loginScreen.style.display='none';app.style.display='block';lockBtn.style.display='block';const sep=APP_URL.includes('?')?'&':'?';app.src=APP_URL+sep+'page=dashboard&token='+encodeURIComponent(token)}
+function handleGoogleCredential(response){clearError();if(!response||!response.credential)return showError('Google non ha restituito una credenziale valida.');statusBox.textContent='⏳ Verifica autorizzazione nel gestionale...';credentialInput.value=response.credential;loginForm.submit()}
+function initGoogleButton(){if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogleButton,120);return}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(document.getElementById('googleButton'),{type:'standard',theme:'outline',size:'large',text:'continue_with',shape:'rectangular',logo_alignment:'left',width:330})}
+
+window.addEventListener('message',event=>{
+  if(event.source===loginTransport.contentWindow){
+    const data=event.data||{};
+    if(data.type!=='GDF_PWA_GOOGLE_LOGIN_RESULT')return;
+    credentialInput.value='';
+    if(!data.success)return showError(data.message||'Questo account Google non è autorizzato.');
+    openGestionale(data.token);return;
+  }
+  if(event.source===app.contentWindow){
+    const data=event.data||{};
+    if(data.type==='GDF_PWA_LOGOUT'||data.type==='GDF_PWA_NEED_LOGIN'){try{google.accounts.id.disableAutoSelect()}catch(e){}showLogin()}
+  }
+});
+lockBtn.addEventListener('click',()=>{try{google.accounts.id.disableAutoSelect()}catch(e){}showLogin()});
+showLogin();initGoogleButton();
+
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
+
+let deferredPrompt=null;
+const installBar=document.getElementById('installBar'),installBtn=document.getElementById('installBtn');
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+if(!isStandalone&&isIOS){installBar.style.display='flex';installBtn.textContent='Come fare';installBtn.onclick=()=>document.getElementById('iosHelp').style.display='grid'}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone)installBar.style.display='flex'});
+installBtn.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBar.style.display='none'});
+window.addEventListener('appinstalled',()=>{installBar.style.display='none';deferredPrompt=null});
 </script>
 </body></html>
